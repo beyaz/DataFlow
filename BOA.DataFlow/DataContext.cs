@@ -11,7 +11,7 @@ namespace BOA.DataFlow
     /// </summary>
     [DebuggerTypeProxy(typeof(DataContextDebugView))]
     [Serializable]
-    public  class DataContext : IEnumerable<DataContextEntry>
+    public class DataContext : IEnumerable<DataContextEntry>
     {
         #region Fields
         /// <summary>

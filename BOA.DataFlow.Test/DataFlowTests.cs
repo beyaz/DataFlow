@@ -96,6 +96,47 @@ namespace BOA.DataFlow
             context.CloseCurrentLayer();
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(DataFlowException))]
+        public void Forwarded_keys_cannot_be_modify()
+        {
+            var keyA = new DataKey<string>("A");
+            var keyB = new DataKey<string>("B");
+
+            var context = new DataContext
+            {
+                {keyA, "A"}
+            };
+            context.ForwardKey(keyB, keyA);
+
+            context.Contains(keyA).Should().BeTrue();
+            context.Contains(keyB).Should().BeTrue();
+
+            context.Add(keyB, "B");
+        }
+
+        /// <summary>
+        ///     Shoulds the math layers.
+        /// </summary>
+        [TestMethod]
+        public void Should_get_data_when_key_is_forwarded()
+        {
+            var context = new DataContext
+            {
+                {data_bracket_0_0, "A"}
+            };
+
+            context.Contains(data_bracket_1_0).Should().BeFalse();
+
+            context.ForwardKey(data_bracket_1_0, data_bracket_0_0);
+
+            context.Contains(data_bracket_1_0).Should().BeTrue();
+
+            context.Get(data_bracket_0_0).Should().Be("A");
+            context.Get(data_bracket_1_0).Should().Be("A");
+            context.TryGet(data_bracket_1_0).Should().Be("A");
+        }
+
         /// <summary>
         ///     Shoulds the math layers.
         /// </summary>
@@ -111,48 +152,6 @@ namespace BOA.DataFlow
             dataContext.CloseCurrentLayer();
             dataContext.CloseCurrentLayer();
             dataContext.CloseCurrentLayer();
-        }
-
-        /// <summary>
-        ///     Shoulds the math layers.
-        /// </summary>
-        [TestMethod]
-        public void Should_get_data_when_key_is_forwarded()
-        {
-            var context = new DataContext
-            {
-                {data_bracket_0_0, "A"}
-            };
-
-
-            context.Contains(data_bracket_1_0).Should().BeFalse();
-
-            context.ForwardKey(data_bracket_1_0,data_bracket_0_0);
-
-            context.Contains(data_bracket_1_0).Should().BeTrue();
-            
-            context.Get(data_bracket_0_0).Should().Be("A");
-            context.Get(data_bracket_1_0).Should().Be("A");
-            context.TryGet(data_bracket_1_0).Should().Be("A");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(DataFlowException))]
-        public void Forwarded_keys_cannot_be_modify()
-        {
-            var keyA = new DataKey<string>("A");
-            var keyB = new DataKey<string>("B");
-
-            var context = new DataContext
-            {
-                {keyA, "A"}
-            };
-            context.ForwardKey(keyB,keyA);
-
-            context.Contains(keyA).Should().BeTrue();
-            context.Contains(keyB).Should().BeTrue();
-
-            context.Add(keyB,"B");
         }
 
         /// <summary>
