@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BOA.DataFlow.Test", "BOA.Da
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E04A4BB2-DFC6-47D4-8335-BCF845DC85FF}"
 	ProjectSection(SolutionItems) = preProject
+		DataFlow.1.0.0.nuspec = DataFlow.1.0.0.nuspec
 		README.md = README.md
 	EndProjectSection
 EndProject
