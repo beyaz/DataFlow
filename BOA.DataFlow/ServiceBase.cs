@@ -16,7 +16,7 @@
         /// <summary>
         ///     Gets the specified data key.
         /// </summary>
-        public T Get<T>(DataKey<T> dataKey)
+        protected T Get<T>(DataKey<T> dataKey)
         {
             return Context.Get(dataKey);
         }
