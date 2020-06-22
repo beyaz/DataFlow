@@ -223,6 +223,26 @@ namespace BOA.DataFlow
             context.CloseCurrentLayer();
             context.CloseCurrentLayer();
         }
+
+        [TestMethod]
+        public void Should_Call_Action_On_Insert_Operation()
+        {
+            var context = new DataContext();
+
+            var temp = string.Empty;
+
+            context.OnInsert(data_bracket_0_0, () => { temp = "A"; });
+
+            context.Add(data_bracket_1_0,string.Empty);
+
+            temp.Should().BeEmpty();
+
+            context.Add(data_bracket_0_0,string.Empty);
+
+            temp.Should().Be("A");
+
+
+        }
         #endregion
     }
 }

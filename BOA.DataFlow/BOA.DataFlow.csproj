@@ -36,6 +36,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventBus.cs" />
     <Compile Include="ServiceBase.cs" />
     <Compile Include="DataKey.cs" />
     <Compile Include="DataContext.cs" />

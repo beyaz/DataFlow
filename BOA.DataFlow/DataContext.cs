@@ -59,6 +59,8 @@ namespace BOA.DataFlow
             }
 
             dictionary[dataKey.Id] = new DataContextEntry(dataKey.Id, currentLayerIndex, value, dataKey.Name);
+
+            OnInserted(dataKey);
         }
 
         /// <summary>
@@ -222,6 +224,39 @@ namespace BOA.DataFlow
             }
 
             return id;
+        }
+        #endregion
+
+        #region On Insert
+        /// <summary>
+        ///     The event bus
+        /// </summary>
+        readonly EventBus eventBus = new EventBus();
+
+        /// <summary>
+        ///     Gets the name of the insert event.
+        /// </summary>
+        string GetInsertEventName<T>(DataKey<T> dataKey)
+        {
+            return "Insert->" + dataKey.Id;
+        }
+
+        /// <summary>
+        ///     Called when [insert].
+        /// </summary>
+        public void OnInsert<T>(DataKey<T> dataKey, Action action)
+        {
+            eventBus.Subscribe(GetInsertEventName(dataKey), action);
+        }
+
+        /// <summary>
+        ///     Called when [inserted].
+        /// </summary>
+        void OnInserted<T>(DataKey<T> dataKey)
+        {
+            var eventName = GetInsertEventName(dataKey);
+
+            eventBus.Publish(eventName);
         }
         #endregion
 
