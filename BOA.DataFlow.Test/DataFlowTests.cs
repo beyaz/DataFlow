@@ -243,6 +243,36 @@ namespace BOA.DataFlow
 
 
         }
+
+        [TestMethod]
+        public void Should_Call_Action_On_Update_Operation()
+        {
+            var context = new DataContext();
+
+            var temp = string.Empty;
+
+            context.OnUpdate(data_bracket_0_0, () => { temp = "A"; });
+
+            context.Add(data_bracket_1_0,string.Empty);
+            context.Update(data_bracket_1_0,string.Empty);
+
+            temp.Should().BeEmpty();
+
+            context.Add(data_bracket_0_0,string.Empty);
+            temp.Should().BeEmpty();
+
+
+            context.Update(data_bracket_0_0,string.Empty);
+            temp.Should().Be("A");
+
+            context.OnRemove(data_bracket_0_0, () => { temp = "R"; });
+
+            context.Remove(data_bracket_0_0);
+            temp.Should().Be("R");
+
+
+
+        }
         #endregion
     }
 }

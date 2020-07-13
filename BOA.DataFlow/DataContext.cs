@@ -151,6 +151,8 @@ namespace BOA.DataFlow
                 }
 
                 dictionary.Remove(dataKey.Id);
+
+                OnRemoved(dataKey);
                 return;
             }
 
@@ -186,6 +188,8 @@ namespace BOA.DataFlow
             }
 
             dictionary[dataKey.Id] = new DataContextEntry(dataKey.Id, currentLayerIndex, value, dataKey.Name);
+
+            OnUpdated(dataKey);
         }
         #endregion
 
@@ -242,6 +246,22 @@ namespace BOA.DataFlow
         }
 
         /// <summary>
+        ///     Gets the name of the update event.
+        /// </summary>
+        string GetUpdateEventName<T>(DataKey<T> dataKey)
+        {
+            return "Update->" + dataKey.Id;
+        }
+
+        /// <summary>
+        ///     Gets the name of the remove event.
+        /// </summary>
+        string GetRemoveEventName<T>(DataKey<T> dataKey)
+        {
+            return "Remove->" + dataKey.Id;
+        }
+
+        /// <summary>
         ///     Called when [insert].
         /// </summary>
         public void OnInsert<T>(DataKey<T> dataKey, Action action)
@@ -250,11 +270,47 @@ namespace BOA.DataFlow
         }
 
         /// <summary>
+        ///     Called when [update].
+        /// </summary>
+        public void OnUpdate<T>(DataKey<T> dataKey, Action action)
+        {
+            eventBus.Subscribe(GetUpdateEventName(dataKey), action);
+        }
+
+        /// <summary>
+        ///     Called when [remove].
+        /// </summary>
+        public void OnRemove<T>(DataKey<T> dataKey, Action action)
+        {
+            eventBus.Subscribe(GetRemoveEventName(dataKey), action);
+        }
+
+        /// <summary>
         ///     Called when [inserted].
         /// </summary>
         void OnInserted<T>(DataKey<T> dataKey)
         {
             var eventName = GetInsertEventName(dataKey);
+
+            eventBus.Publish(eventName);
+        }
+
+        /// <summary>
+        ///     Called when [updated].
+        /// </summary>
+        void OnUpdated<T>(DataKey<T> dataKey)
+        {
+            var eventName = GetUpdateEventName(dataKey);
+
+            eventBus.Publish(eventName);
+        }
+
+        /// <summary>
+        ///     Called when [removed].
+        /// </summary>
+        void OnRemoved<T>(DataKey<T> dataKey)
+        {
+            var eventName = GetRemoveEventName(dataKey);
 
             eventBus.Publish(eventName);
         }
