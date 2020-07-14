@@ -333,5 +333,55 @@ namespace BOA.DataFlow
             return GetEnumerator();
         }
         #endregion
+
+        #region Event Bus
+        /// <summary>
+        ///     Publishes the event.
+        /// </summary>
+        public void PublishEvent(string eventName)
+        {
+            eventBus.Publish(eventName);
+        }
+
+        /// <summary>
+        ///     Publishes the event.
+        /// </summary>
+        public void PublishEvent(Enum eventName)
+        {
+            eventBus.Publish(eventName.ToString());
+        }
+
+        /// <summary>
+        ///     Subscribes the event.
+        /// </summary>
+        public void SubscribeEvent(string eventName, Action action)
+        {
+            eventBus.Subscribe(eventName, action);
+        }
+
+        /// <summary>
+        ///     Subscribes the event.
+        /// </summary>
+        public void SubscribeEvent(Enum eventName, Action action)
+        {
+            eventBus.Subscribe(eventName.ToString(), action);
+        }
+
+        /// <summary>
+        ///     Uns the subscribe event.
+        /// </summary>
+        public void UnSubscribeEvent(string eventName, Action action)
+        {
+            eventBus.UnSubscribe(eventName, action);
+        }
+
+        /// <summary>
+        ///     Uns the subscribe event.
+        /// </summary>
+        public void UnSubscribeEvent(Enum eventName, Action action)
+        {
+            eventBus.UnSubscribe(eventName.ToString(), action);
+        }
+        #endregion
     }
 }
