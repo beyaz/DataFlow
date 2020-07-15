@@ -273,6 +273,34 @@ namespace BOA.DataFlow
 
 
         }
+
+
+        [TestMethod]
+        public void Should_get_data_when_virtual_key_used()
+        {
+            var context = new DataContext();
+
+            var key1 = new DataKey<string>("key1");
+            var key2 = new DataKey<string>("key2");
+            var key3 = new DataKey<string>("key3");
+            var key4 = new DataKey<string>("key4");
+
+            context.Add(key1,"A");
+            context.Add(key2,"B");
+
+            context.Contains(key3).Should().BeFalse();
+
+            context.SetupGet(key3, c =>c.Get(key1) + "X" +c.Get(key2) );
+
+
+            context.Get(key3).Should().Be("AXB");
+
+            context.ForwardKey(key4,key3);
+
+
+            context.Get(key4).Should().Be("AXB");
+        }
+
         #endregion
     }
 }

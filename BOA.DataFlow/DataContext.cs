@@ -33,6 +33,11 @@ namespace BOA.DataFlow
         ///     The forward map
         /// </summary>
         readonly Dictionary<string, string> forwardMap = new Dictionary<string, string>();
+
+        /// <summary>
+        ///     The get handlers
+        /// </summary>
+        readonly Dictionary<string, Func<DataContext, object>> getHandlers = new Dictionary<string, Func<DataContext, object>>();
         #endregion
 
         #region Public Properties
@@ -125,6 +130,12 @@ namespace BOA.DataFlow
                 return (T) dataContextEntry.Value;
             }
 
+            Func<DataContext, object> getHandlerFunc = null;
+            if (getHandlers.TryGetValue(id, out getHandlerFunc))
+            {
+                return (T) getHandlerFunc(this);
+            }
+
             throw NoDataFoundException(dataKey);
         }
 
@@ -157,6 +168,16 @@ namespace BOA.DataFlow
             }
 
             throw NoDataFoundException(dataKey);
+        }
+
+        /// <summary>
+        ///     Setups the get.
+        /// </summary>
+        public void SetupGet<T>(DataKey<T> dataKey, Func<DataContext, T> getHandler)
+        {
+            var id = GetId(dataKey);
+
+            getHandlers.Add(id, c => getHandler(c));
         }
 
         /// <summary>
