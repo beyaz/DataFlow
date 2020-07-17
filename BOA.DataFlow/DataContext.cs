@@ -197,6 +197,21 @@ namespace BOA.DataFlow
         }
 
         /// <summary>
+        ///     Tries the remove.
+        /// </summary>
+        public bool TryRemove<T>(DataKey<T> key)
+        {
+            if (Contains(key))
+            {
+                Remove(key);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         ///     Updates the specified data key.
         /// </summary>
         public void Update<T>(DataKey<T> dataKey, T value)
