@@ -1,5 +1,7 @@
-﻿using FluentAssertions;
+﻿using System.IO;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 
 namespace BOA.DataFlow
 {
@@ -49,10 +51,9 @@ namespace BOA.DataFlow
         [ExpectedException(typeof(DataFlowException))]
         public void Can_not_modify_parent_scope_data()
         {
-            var context = new DataContext
-            {
-                {data_bracket_0_0, "A"}
-            };
+            var context = new DataContext();
+            data_bracket_0_0[context] = "A";
+          
 
             context.OpenNewLayer(string.Empty);
             context.Add(data_bracket_1_0, "B");
@@ -69,11 +70,9 @@ namespace BOA.DataFlow
         [ExpectedException(typeof(DataFlowException))]
         public void Can_not_remove_parent_scope_data()
         {
-            var context = new DataContext
-            {
-                {data_bracket_0_0, "A"}
-            };
-
+            var context = new DataContext();
+            data_bracket_0_0[context] = "A";
+            
             context.OpenNewLayer(string.Empty);
             context.Add(data_bracket_1_0, "B");
 
@@ -103,10 +102,8 @@ namespace BOA.DataFlow
             var keyA = new DataKey<string>("A");
             var keyB = new DataKey<string>("B");
 
-            var context = new DataContext
-            {
-                {keyA, "A"}
-            };
+            var context = new DataContext();
+            keyA[context] = "A";
             context.ForwardKey(keyB, keyA);
 
             context.Contains(keyA).Should().BeTrue();
@@ -121,10 +118,8 @@ namespace BOA.DataFlow
         [TestMethod]
         public void Should_get_data_when_key_is_forwarded()
         {
-            var context = new DataContext
-            {
-                {data_bracket_0_0, "A"}
-            };
+            var context = new DataContext();
+            data_bracket_0_0[context] = "A";
 
             context.Contains(data_bracket_1_0).Should().BeFalse();
 
@@ -299,6 +294,39 @@ namespace BOA.DataFlow
 
 
             context.Get(key4).Should().Be("AXB");
+        }
+
+
+        [TestMethod]
+        public void CanBeSerialize()
+        {
+            var context = new DataContext();
+
+            var key1 = new DataKey<string>("key1");
+            var key2 = new DataKey<string>("key2");
+            var key3 = new DataKey<string>("key3");
+            var key4 = new DataKey<string>("key4");
+
+            context.Add(key1,"A");
+            context.Add(key2,"B");
+            context.OpenNewLayer("Layer1");
+            context.Add(key3,"C");
+            context.Add(key4,"D");
+
+            var json = JsonConvert.SerializeObject(context);
+            
+            File.WriteAllText("D:\\A.txt",json);
+
+            context = JsonConvert.DeserializeObject<DataContext>(json);
+
+            context.CurrentLayerName.Should().Be("Layer1");
+
+            key4[context].Should().Be("D");
+
+            
+            context.CloseCurrentLayer();
+
+            context.Contains(key4).Should().BeFalse();
         }
 
         #endregion

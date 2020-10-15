@@ -42,6 +42,22 @@ namespace BOA.DataFlow
 
         #region Public Properties
         /// <summary>
+        ///     Gets the name of the current layer.
+        /// </summary>
+        public string CurrentLayerName
+        {
+            get
+            {
+                if (currentLayerIndex >= 0)
+                {
+                    return layerNames[currentLayerIndex];
+                }
+
+                return null;
+            }
+        }
+
+        /// <summary>
         ///     Gets a value indicating whether this instance is empty.
         /// </summary>
         public bool IsEmpty
