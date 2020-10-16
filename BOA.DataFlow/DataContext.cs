@@ -56,7 +56,7 @@ namespace BOA.DataFlow
                 return null;
             }
         }
-
+        
         /// <summary>
         ///     Gets a value indicating whether this instance is empty.
         /// </summary>
