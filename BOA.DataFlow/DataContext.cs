@@ -160,6 +160,11 @@ namespace BOA.DataFlow
         /// </summary>
         public void OpenNewLayer(string layerName)
         {
+            if (layerName == null)
+            {
+                throw new ArgumentNullException(nameof(layerName));
+            }
+
             currentLayerIndex++;
             layerNames.Add(layerName);
         }
