@@ -441,7 +441,7 @@ namespace BOA.DataFlow
         /// </summary>
         void ICollection<DataContextEntry>.Clear()
         {
-            dictionary.Clear();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -449,12 +449,7 @@ namespace BOA.DataFlow
         /// </summary>
         bool ICollection<DataContextEntry>.Contains(DataContextEntry entry)
         {
-            if (entry == null)
-            {
-                throw new ArgumentNullException(nameof(entry));
-            }
-
-            return dictionary.ContainsKey(entry.Key);
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -462,6 +457,7 @@ namespace BOA.DataFlow
         /// </summary>
         void ICollection<DataContextEntry>.CopyTo(DataContextEntry[] array, int arrayIndex)
         {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -469,7 +465,7 @@ namespace BOA.DataFlow
         /// </summary>
         bool ICollection<DataContextEntry>.Remove(DataContextEntry entry)
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         /// <summary>
