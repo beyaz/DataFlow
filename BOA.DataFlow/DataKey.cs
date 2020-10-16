@@ -1,4 +1,6 @@
-﻿namespace BOA.DataFlow
+﻿using System;
+
+namespace BOA.DataFlow
 {
     /// <summary>
     ///     The data key
@@ -13,6 +15,26 @@
         {
             Name = name;
             Id   = IdGenerator.GetNextId().ToString();
+        }
+
+        public DataKey(Type locatedType, string fieldName)
+        {
+            if (locatedType == null)
+            {
+                throw new ArgumentNullException(nameof(locatedType));
+            }
+
+            if (fieldName == null)
+            {
+                throw new ArgumentNullException(nameof(fieldName));
+            }
+
+            if (string.IsNullOrEmpty(fieldName))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(fieldName));
+            }
+
+            Id = $"{locatedType.FullName}:{fieldName}";
         }
         #endregion
 

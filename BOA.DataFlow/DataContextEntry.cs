@@ -6,8 +6,7 @@ namespace BOA.DataFlow
     /// <summary>
     ///     The data context entry
     /// </summary>
-    [DebuggerDisplay("{DataKeyName} = {Value}")]
-    [DebuggerTypeProxy(typeof(DataContextEntryDebugView))]
+    [DebuggerDisplay("{shortName} = {Value}")]
     [Serializable]
     public class DataContextEntry
     {
@@ -15,21 +14,26 @@ namespace BOA.DataFlow
         /// <summary>
         ///     Initializes a new instance of the <see cref="DataContextEntry" /> class.
         /// </summary>
-        public DataContextEntry(string key, int layerIndex, object value, string dataKeyName)
+        public DataContextEntry(string key, int layerIndex, object value)
         {
             Key         = key;
             LayerIndex  = layerIndex;
             Value       = value;
-            DataKeyName = dataKeyName;
+
+            shortName = key;
+            if (shortName.Contains(":"))
+            {
+                var lastIndexOf = shortName.LastIndexOf(":", StringComparison.Ordinal);
+
+                shortName = shortName.Substring(lastIndexOf, shortName.Length - lastIndexOf);
+            }
+
         }
         #endregion
 
-        #region Public Properties
-        /// <summary>
-        ///     The data key name
-        /// </summary>
-        public string DataKeyName { get; }
+        string shortName;
 
+        #region Public Properties
         /// <summary>
         ///     The key
         /// </summary>
@@ -52,7 +56,7 @@ namespace BOA.DataFlow
         /// </summary>
         public override string ToString()
         {
-            return $"Layer: {LayerIndex} - Key: {DataKeyName} : {Value}";
+            return $"Layer: {LayerIndex} - Key: {shortName} : {Value}";
         }
         #endregion
     }

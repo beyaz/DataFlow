@@ -42,7 +42,6 @@
     <Compile Include="DataContext.cs" />
     <Compile Include="DataContextDebugView.cs" />
     <Compile Include="DataContextEntry.cs" />
-    <Compile Include="DataContextEntryDebugView.cs" />
     <Compile Include="DataFlowException.cs" />
     <Compile Include="IdGenerator.cs" />
     <Compile Include="LayerDebugView.cs" />

@@ -79,7 +79,7 @@ namespace BOA.DataFlow
                 throw new DataFlowException($"Data key should remove before set operation. Data key is '{dataKey}'");
             }
 
-            dictionary[dataKey.Id] = new DataContextEntry(dataKey.Id, currentLayerIndex, value, dataKey.Name);
+            dictionary[dataKey.Id] = new DataContextEntry(dataKey.Id, currentLayerIndex, value);
 
             OnInserted(dataKey);
         }
@@ -239,7 +239,7 @@ namespace BOA.DataFlow
                 Remove(dataKey);
             }
 
-            dictionary[dataKey.Id] = new DataContextEntry(dataKey.Id, currentLayerIndex, value, dataKey.Name);
+            dictionary[dataKey.Id] = new DataContextEntry(dataKey.Id, currentLayerIndex, value);
 
             OnUpdated(dataKey);
         }
