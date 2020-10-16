@@ -46,7 +46,7 @@ namespace BOA.DataFlow
                 return layerNames.Last();
             }
         }
-        
+
         /// <summary>
         ///     Gets a value indicating whether this instance is empty.
         /// </summary>
@@ -270,7 +270,7 @@ namespace BOA.DataFlow
         }
 
         /// <summary>
-        /// Gets the identifier.
+        ///     Gets the identifier.
         /// </summary>
         string GetId(string id)
         {
@@ -290,7 +290,7 @@ namespace BOA.DataFlow
         ///     The event bus
         /// </summary>
         readonly EventBus eventBus = new EventBus();
-        
+
         /// <summary>
         ///     Gets the name of the insert event.
         /// </summary>
@@ -370,23 +370,7 @@ namespace BOA.DataFlow
         }
         #endregion
 
-        #region IEnumerable
-        /// <summary>
-        ///     Returns an enumerator that iterates through the collection.
-        /// </summary>
-        public IEnumerator<DataContextEntry> GetEnumerator()
-        {
-            return ((IEnumerable<DataContextEntry>) dictionary.Values).GetEnumerator();
-        }
 
-        /// <summary>
-        ///     Returns an enumerator that iterates through a collection.
-        /// </summary>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-        #endregion
 
         #region Event Bus
         /// <summary>
@@ -439,6 +423,9 @@ namespace BOA.DataFlow
         #endregion
         #region ICollection
 
+        /// <summary>
+        ///     Adds the specified entry.
+        /// </summary>
         void ICollection<DataContextEntry>.Add(DataContextEntry entry)
         {
             if (entry == null)
@@ -454,11 +441,17 @@ namespace BOA.DataFlow
             dictionary[entry.Key] = entry;
         }
 
+        /// <summary>
+        ///     Clears this instance.
+        /// </summary>
         void ICollection<DataContextEntry>.Clear()
         {
             dictionary.Clear();
         }
 
+        /// <summary>
+        ///     Determines whether [contains] [the specified entry].
+        /// </summary>
         bool ICollection<DataContextEntry>.Contains(DataContextEntry entry)
         {
             if (entry == null)
@@ -469,18 +462,49 @@ namespace BOA.DataFlow
             return dictionary.ContainsKey(entry.Key);
         }
 
+        /// <summary>
+        ///     Copies to.
+        /// </summary>
         void ICollection<DataContextEntry>.CopyTo(DataContextEntry[] array, int arrayIndex)
         {
         }
 
+        /// <summary>
+        ///     Removes the specified entry.
+        /// </summary>
         bool ICollection<DataContextEntry>.Remove(DataContextEntry entry)
         {
             return false;
         }
 
+        /// <summary>
+        ///     Gets the count.
+        /// </summary>
         int ICollection<DataContextEntry>.Count => dictionary.Count;
 
-        bool ICollection<DataContextEntry>.IsReadOnly => false; 
+        /// <summary>
+        ///     Gets a value indicating whether this instance is read only.
+        /// </summary>
+        bool ICollection<DataContextEntry>.IsReadOnly => false;
+
+        /// <summary>
+        ///     Returns an enumerator that iterates through the collection.
+        /// </summary>
+        public IEnumerator<DataContextEntry> GetEnumerator()
+        {
+            return ((IEnumerable<DataContextEntry>) dictionary.Values).GetEnumerator();
+        }
+
+        /// <summary>
+        ///     Returns an enumerator that iterates through a collection.
+        /// </summary>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        
         #endregion
+
+        
     }
 }
