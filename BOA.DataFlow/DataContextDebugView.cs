@@ -37,11 +37,11 @@ namespace BOA.DataFlow
             {
                 var items = new List<LayerDebugView>();
 
-                for (var i = 0; i < data.layerNames.Count; i++ )
+                for (var i = 0; i < data.layerNames.Count; i++)
                 {
                     var layerName = data.layerNames[i];
 
-                    var entries = data.dictionary.Values.Where(x => x.Layer == LayerHelper.GetCurrentLayerId(layerName,i+1)).ToArray();
+                    var entries = data.dictionary.Values.Where(x => x.Layer == LayerHelper.GetCurrentLayerId(layerName, i + 1)).ToArray();
 
                     items.Add(new LayerDebugView {LayerName = layerName, Items = entries});
                 }

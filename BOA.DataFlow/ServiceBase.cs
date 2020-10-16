@@ -12,7 +12,7 @@
         public DataContext Context { get; set; }
         #endregion
 
-        #region Public Methods
+        #region Methods
         /// <summary>
         ///     Gets the specified data key.
         /// </summary>

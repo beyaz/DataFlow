@@ -15,32 +15,32 @@ namespace BOA.DataFlow
         /// <summary>
         ///     The data bracket 0 0
         /// </summary>
-        static readonly DataKey<string> data_bracket_0_0 = new DataKey<string>(typeof(DataFlowTests),nameof(data_bracket_0_0));
+        static readonly DataKey<string> data_bracket_0_0 = new DataKey<string>(typeof(DataFlowTests), nameof(data_bracket_0_0));
 
         /// <summary>
         ///     The data bracket 1 0
         /// </summary>
-        static readonly DataKey<string> data_bracket_1_0 = new DataKey<string>(typeof(DataFlowTests),nameof(data_bracket_1_0));
+        static readonly DataKey<string> data_bracket_1_0 = new DataKey<string>(typeof(DataFlowTests), nameof(data_bracket_1_0));
 
         /// <summary>
         ///     The data bracket 1 1
         /// </summary>
-        static readonly DataKey<string> data_bracket_1_1 = new DataKey<string>(typeof(DataFlowTests),nameof(data_bracket_1_1));
+        static readonly DataKey<string> data_bracket_1_1 = new DataKey<string>(typeof(DataFlowTests), nameof(data_bracket_1_1));
 
         /// <summary>
         ///     The data bracket 2 0
         /// </summary>
-        static readonly DataKey<string> data_bracket_2_0 = new DataKey<string>(typeof(DataFlowTests),nameof(data_bracket_2_0));
+        static readonly DataKey<string> data_bracket_2_0 = new DataKey<string>(typeof(DataFlowTests), nameof(data_bracket_2_0));
 
         /// <summary>
         ///     The data bracket 2 1
         /// </summary>
-        static readonly DataKey<string> data_bracket_2_1 = new DataKey<string>(typeof(DataFlowTests),nameof(data_bracket_2_1));
+        static readonly DataKey<string> data_bracket_2_1 = new DataKey<string>(typeof(DataFlowTests), nameof(data_bracket_2_1));
 
         /// <summary>
         ///     The data bracket 2 2
         /// </summary>
-        static readonly DataKey<string> data_bracket_2_2 = new DataKey<string>(typeof(DataFlowTests),nameof(data_bracket_2_2));
+        static readonly DataKey<string> data_bracket_2_2 = new DataKey<string>(typeof(DataFlowTests), nameof(data_bracket_2_2));
         #endregion
 
         #region Public Methods
@@ -53,7 +53,6 @@ namespace BOA.DataFlow
         {
             var context = new DataContext();
             data_bracket_0_0[context] = "A";
-          
 
             context.OpenNewLayer(string.Empty);
             context.Add(data_bracket_1_0, "B");
@@ -72,7 +71,7 @@ namespace BOA.DataFlow
         {
             var context = new DataContext();
             data_bracket_0_0[context] = "A";
-            
+
             context.OpenNewLayer(string.Empty);
             context.Add(data_bracket_1_0, "B");
 
@@ -99,11 +98,45 @@ namespace BOA.DataFlow
         }
 
         [TestMethod]
+        public void CanBeSerialize()
+        {
+            var context = new DataContext();
+
+            var key1 = new DataKey<string>(typeof(DataFlowTests), "key1");
+            var key2 = new DataKey<string>(typeof(DataFlowTests), "key2");
+            var key3 = new DataKey<string>(typeof(DataFlowTests), "key3");
+            var key4 = new DataKey<string>(typeof(DataFlowTests), "key4");
+
+            context.Add(key1, "A");
+            context.Add(key2, "B");
+            context.OpenNewLayer("Layer1");
+            context.Add(key3, "C");
+            context.Add(key4, "D");
+
+            var json = JsonConvert.SerializeObject(context, Formatting.Indented, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            });
+
+            File.WriteAllText("D:\\A.txt", json);
+
+            context = JsonConvert.DeserializeObject<DataContext>(json);
+
+            context.CurrentLayerName.Should().Be("Layer1");
+
+            key4[context].Should().Be("D");
+
+            context.CloseCurrentLayer();
+
+            context.Contains(key4).Should().BeFalse();
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(DataFlowException))]
         public void Forwarded_keys_cannot_be_modify()
         {
-            var keyA = new DataKey<string>(typeof(DataFlowTests),"A");
-            var keyB = new DataKey<string>(typeof(DataFlowTests),"B");
+            var keyA = new DataKey<string>(typeof(DataFlowTests), "A");
+            var keyB = new DataKey<string>(typeof(DataFlowTests), "B");
 
             var context = new DataContext();
             keyA[context] = "A";
@@ -113,6 +146,72 @@ namespace BOA.DataFlow
             context.Contains(keyB).Should().BeTrue();
 
             context.Add(keyB, "B");
+        }
+
+        [TestMethod]
+        public void Should_Call_Action_On_Insert_Operation()
+        {
+            var context = new DataContext();
+
+            var temp = string.Empty;
+
+            context.OnInsert(data_bracket_0_0, () => { temp = "A"; });
+
+            context.Add(data_bracket_1_0, string.Empty);
+
+            temp.Should().BeEmpty();
+
+            context.Add(data_bracket_0_0, string.Empty);
+
+            temp.Should().Be("A");
+        }
+
+        [TestMethod]
+        public void Should_Call_Action_On_Update_Operation()
+        {
+            var context = new DataContext();
+
+            var temp = string.Empty;
+
+            context.OnUpdate(data_bracket_0_0, () => { temp = "A"; });
+
+            context.Add(data_bracket_1_0, string.Empty);
+            context.Update(data_bracket_1_0, string.Empty);
+
+            temp.Should().BeEmpty();
+
+            context.Add(data_bracket_0_0, string.Empty);
+            temp.Should().BeEmpty();
+
+            context.Update(data_bracket_0_0, string.Empty);
+            temp.Should().Be("A");
+
+            context.OnRemove(data_bracket_0_0, () => { temp = "R"; });
+
+            context.Remove(data_bracket_0_0);
+            temp.Should().Be("R");
+        }
+
+        [TestMethod]
+        public void Should_fire_events_when_layer_closed()
+        {
+            var context = new DataContext();
+
+            var key1 = new DataKey<string>(typeof(DataFlowTests), "key1");
+            var key2 = new DataKey<string>(typeof(DataFlowTests), "key2");
+            var key3 = new DataKey<string>(typeof(DataFlowTests), "key3");
+            var key4 = new DataKey<string>(typeof(DataFlowTests), "key4");
+
+            var temp = "";
+            context.OnRemove(key1, () => temp = "key1_remoed");
+            context.OpenNewLayer("L1");
+            temp.Should().Be(string.Empty);
+            context.Add(key1, "A");
+            context.Add(key2, "B");
+
+            context.CloseCurrentLayer();
+
+            temp.Should().Be("key1_remoed");
         }
 
         /// <summary>
@@ -133,6 +232,30 @@ namespace BOA.DataFlow
             context.Get(data_bracket_0_0).Should().Be("A");
             context.Get(data_bracket_1_0).Should().Be("A");
             context.TryGet(data_bracket_1_0).Should().Be("A");
+        }
+
+        [TestMethod]
+        public void Should_get_data_when_virtual_key_used()
+        {
+            var context = new DataContext();
+
+            var key1 = new DataKey<string>(typeof(DataFlowTests), "key1");
+            var key2 = new DataKey<string>(typeof(DataFlowTests), "key2");
+            var key3 = new DataKey<string>(typeof(DataFlowTests), "key3");
+            var key4 = new DataKey<string>(typeof(DataFlowTests), "key4");
+
+            context.Add(key1, "A");
+            context.Add(key2, "B");
+
+            context.Contains(key3).Should().BeFalse();
+
+            context.SetupGet(key3, c => c.Get(key1) + "X" + c.Get(key2));
+
+            context.Get(key3).Should().Be("AXB");
+
+            context.ForwardKey(key4, key3);
+
+            context.Get(key4).Should().Be("AXB");
         }
 
         /// <summary>
@@ -221,120 +344,6 @@ namespace BOA.DataFlow
             context.CloseCurrentLayer();
             context.CloseCurrentLayer();
         }
-
-        [TestMethod]
-        public void Should_Call_Action_On_Insert_Operation()
-        {
-            var context = new DataContext();
-
-            var temp = string.Empty;
-
-            context.OnInsert(data_bracket_0_0, () => { temp = "A"; });
-
-            context.Add(data_bracket_1_0,string.Empty);
-
-            temp.Should().BeEmpty();
-
-            context.Add(data_bracket_0_0,string.Empty);
-
-            temp.Should().Be("A");
-
-
-        }
-
-        [TestMethod]
-        public void Should_Call_Action_On_Update_Operation()
-        {
-            var context = new DataContext();
-
-            var temp = string.Empty;
-
-            context.OnUpdate(data_bracket_0_0, () => { temp = "A"; });
-
-            context.Add(data_bracket_1_0,string.Empty);
-            context.Update(data_bracket_1_0,string.Empty);
-
-            temp.Should().BeEmpty();
-
-            context.Add(data_bracket_0_0,string.Empty);
-            temp.Should().BeEmpty();
-
-
-            context.Update(data_bracket_0_0,string.Empty);
-            temp.Should().Be("A");
-
-            context.OnRemove(data_bracket_0_0, () => { temp = "R"; });
-
-            context.Remove(data_bracket_0_0);
-            temp.Should().Be("R");
-
-
-
-        }
-
-
-        [TestMethod]
-        public void Should_get_data_when_virtual_key_used()
-        {
-            var context = new DataContext();
-
-            var key1 = new DataKey<string>(typeof(DataFlowTests),"key1");
-            var key2 = new DataKey<string>(typeof(DataFlowTests),"key2");
-            var key3 = new DataKey<string>(typeof(DataFlowTests),"key3");
-            var key4 = new DataKey<string>(typeof(DataFlowTests),"key4");
-
-            context.Add(key1,"A");
-            context.Add(key2,"B");
-
-            context.Contains(key3).Should().BeFalse();
-
-            context.SetupGet(key3, c =>c.Get(key1) + "X" +c.Get(key2) );
-
-
-            context.Get(key3).Should().Be("AXB");
-
-            context.ForwardKey(key4,key3);
-
-
-            context.Get(key4).Should().Be("AXB");
-        }
-
-
-        [TestMethod]
-        public void CanBeSerialize()
-        {
-            var context = new DataContext();
-
-            var key1 = new DataKey<string>(typeof(DataFlowTests),"key1");
-            var key2 = new DataKey<string>(typeof(DataFlowTests),"key2");
-            var key3 = new DataKey<string>(typeof(DataFlowTests),"key3");
-            var key4 = new DataKey<string>(typeof(DataFlowTests),"key4");
-
-            context.Add(key1,"A");
-            context.Add(key2,"B");
-            context.OpenNewLayer("Layer1");
-            context.Add(key3,"C");
-            context.Add(key4,"D");
-
-            var json = JsonConvert.SerializeObject(context,Formatting.Indented, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto
-            });
-            
-            File.WriteAllText("D:\\A.txt",json);
-
-            context = JsonConvert.DeserializeObject<DataContext>(json);
-
-            context.CurrentLayerName.Should().Be("Layer1");
-
-            key4[context].Should().Be("D");
-
-            
-            context.CloseCurrentLayer();
-
-            context.Contains(key4).Should().BeFalse();
-        }
-
         #endregion
     }
 }

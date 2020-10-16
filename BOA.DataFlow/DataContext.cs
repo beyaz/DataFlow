@@ -88,6 +88,7 @@ namespace BOA.DataFlow
             foreach (var key in removeList)
             {
                 dictionary.Remove(key);
+                OnRemoved(key);
             }
 
             layerNames.RemoveAt(layerNames.Count - 1);
@@ -313,6 +314,14 @@ namespace BOA.DataFlow
         }
 
         /// <summary>
+        ///     Gets the name of the remove event.
+        /// </summary>
+        string GetRemoveEventName(string id)
+        {
+            return "Remove->" + id;
+        }
+
+        /// <summary>
         ///     Called when [insert].
         /// </summary>
         public void OnInsert<T>(DataKey<T> dataKey, Action action)
@@ -362,6 +371,16 @@ namespace BOA.DataFlow
         void OnRemoved<T>(DataKey<T> dataKey)
         {
             var eventName = GetRemoveEventName(dataKey);
+
+            eventBus.Publish(eventName);
+        }
+
+        /// <summary>
+        ///     Called when [removed].
+        /// </summary>
+        void OnRemoved(string entryId)
+        {
+            var eventName = GetRemoveEventName(entryId);
 
             eventBus.Publish(eventName);
         }

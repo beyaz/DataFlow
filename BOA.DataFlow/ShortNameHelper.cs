@@ -20,7 +20,7 @@ namespace BOA.DataFlow
 
             var lastIndexOf = id.LastIndexOf(":", StringComparison.Ordinal);
 
-            return id.Substring(lastIndexOf+1, id.Length - lastIndexOf-1);
+            return id.Substring(lastIndexOf + 1, id.Length - lastIndexOf - 1);
         }
         #endregion
     }
