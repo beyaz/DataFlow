@@ -20,14 +20,7 @@ namespace BOA.DataFlow
             LayerIndex  = layerIndex;
             Value       = value;
 
-            shortName = key;
-            if (shortName.Contains(":"))
-            {
-                var lastIndexOf = shortName.LastIndexOf(":", StringComparison.Ordinal);
-
-                shortName = shortName.Substring(lastIndexOf, shortName.Length - lastIndexOf);
-            }
-
+            shortName = ShortNameHelper.GetShortName(key);
         }
         #endregion
 

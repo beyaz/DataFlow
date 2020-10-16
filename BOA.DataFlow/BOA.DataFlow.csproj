@@ -43,9 +43,9 @@
     <Compile Include="DataContextDebugView.cs" />
     <Compile Include="DataContextEntry.cs" />
     <Compile Include="DataFlowException.cs" />
-    <Compile Include="IdGenerator.cs" />
     <Compile Include="LayerDebugView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShortNameHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

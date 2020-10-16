@@ -11,12 +11,6 @@ namespace BOA.DataFlow
         /// <summary>
         ///     Initializes a new instance of the <see cref="DataKey{TValueType}" /> class.
         /// </summary>
-        public DataKey(string name)
-        {
-            Name = name;
-            Id   = IdGenerator.GetNextId().ToString();
-        }
-
         public DataKey(Type locatedType, string fieldName)
         {
             if (locatedType == null)
@@ -43,11 +37,6 @@ namespace BOA.DataFlow
         ///     Gets the identifier.
         /// </summary>
         public string Id { get; }
-
-        /// <summary>
-        ///     Gets the name.
-        /// </summary>
-        public string Name { get; }
         #endregion
 
         #region Public Indexers
@@ -67,12 +56,7 @@ namespace BOA.DataFlow
         /// </summary>
         public override string ToString()
         {
-            if (Name == null)
-            {
-                return $"Id: {Id} - Type: {typeof(TValueType).FullName}";
-            }
-
-            return $"name: {Name} - Type: {typeof(TValueType).FullName}";
+            return $"name: {ShortNameHelper.GetShortName(Id)} - Type: {typeof(TValueType).FullName}";
         }
         #endregion
     }
