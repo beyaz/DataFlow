@@ -6,25 +6,30 @@ namespace BOA.DataFlow
     /// <summary>
     ///     The data context entry
     /// </summary>
-    [DebuggerDisplay("{shortName} = {Value}")]
+    [DebuggerDisplay("{shortName} : {Value}")]
     [Serializable]
     public class DataContextEntry
     {
+        #region Fields
+        /// <summary>
+        ///     The short name
+        /// </summary>
+        readonly string shortName;
+        #endregion
+
         #region Constructors
         /// <summary>
         ///     Initializes a new instance of the <see cref="DataContextEntry" /> class.
         /// </summary>
         public DataContextEntry(string key, int layerIndex, object value)
         {
-            Key         = key;
-            LayerIndex  = layerIndex;
-            Value       = value;
+            Key        = key;
+            LayerIndex = layerIndex;
+            Value      = value;
 
             shortName = ShortNameHelper.GetShortName(key);
         }
         #endregion
-
-        string shortName;
 
         #region Public Properties
         /// <summary>
