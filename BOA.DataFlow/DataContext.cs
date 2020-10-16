@@ -11,7 +11,7 @@ namespace BOA.DataFlow
     /// </summary>
     [DebuggerTypeProxy(typeof(DataContextDebugView))]
     [Serializable]
-    public class DataContext : IEnumerable<DataContextEntry>
+    public class DataContext : ICollection<DataContextEntry>
     {
         #region Fields
         /// <summary>
@@ -266,8 +266,14 @@ namespace BOA.DataFlow
         /// </summary>
         string GetId<T>(DataKey<T> dataKey)
         {
-            var id = dataKey.Id;
+            return GetId(dataKey.Id);
+        }
 
+        /// <summary>
+        /// Gets the identifier.
+        /// </summary>
+        string GetId(string id)
+        {
             string targetId = null;
 
             if (forwardMap.TryGetValue(id, out targetId))
@@ -284,7 +290,7 @@ namespace BOA.DataFlow
         ///     The event bus
         /// </summary>
         readonly EventBus eventBus = new EventBus();
-
+        
         /// <summary>
         ///     Gets the name of the insert event.
         /// </summary>
@@ -430,6 +436,51 @@ namespace BOA.DataFlow
         {
             eventBus.UnSubscribe(eventName.ToString(), action);
         }
+        #endregion
+        #region ICollection
+
+        void ICollection<DataContextEntry>.Add(DataContextEntry entry)
+        {
+            if (entry == null)
+            {
+                throw new ArgumentNullException(nameof(entry));
+            }
+
+            if (entry.Layer != LayerHelper.GetCurrentLayerId(layerNames))
+            {
+                OpenNewLayer(LayerHelper.GetLayerName(entry.Layer));
+            }
+
+            dictionary[entry.Key] = entry;
+        }
+
+        void ICollection<DataContextEntry>.Clear()
+        {
+            dictionary.Clear();
+        }
+
+        bool ICollection<DataContextEntry>.Contains(DataContextEntry entry)
+        {
+            if (entry == null)
+            {
+                throw new ArgumentNullException(nameof(entry));
+            }
+
+            return dictionary.ContainsKey(entry.Key);
+        }
+
+        void ICollection<DataContextEntry>.CopyTo(DataContextEntry[] array, int arrayIndex)
+        {
+        }
+
+        bool ICollection<DataContextEntry>.Remove(DataContextEntry entry)
+        {
+            return false;
+        }
+
+        int ICollection<DataContextEntry>.Count => dictionary.Count;
+
+        bool ICollection<DataContextEntry>.IsReadOnly => false; 
         #endregion
     }
 }

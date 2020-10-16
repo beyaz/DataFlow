@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BOA.DataFlow
 {
@@ -27,6 +28,20 @@ namespace BOA.DataFlow
         public static string GetCurrentLayerId(string layerName, int index)
         {
             return index + ":" + layerName;
+        }
+
+        /// <summary>
+        ///     Gets the name of the layer.
+        /// </summary>
+        public static string GetLayerName(string layerId)
+        {
+            var semiColumnIndex = layerId.IndexOf(":", StringComparison.OrdinalIgnoreCase);
+            if (semiColumnIndex < 0)
+            {
+                return layerId;
+            }
+
+            return layerId.Substring(semiColumnIndex + 1);
         }
         #endregion
     }

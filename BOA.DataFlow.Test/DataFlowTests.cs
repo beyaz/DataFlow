@@ -316,7 +316,10 @@ namespace BOA.DataFlow
             context.Add(key3,"C");
             context.Add(key4,"D");
 
-            var json = JsonConvert.SerializeObject(context);
+            var json = JsonConvert.SerializeObject(context,Formatting.Indented, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            });
             
             File.WriteAllText("D:\\A.txt",json);
 
