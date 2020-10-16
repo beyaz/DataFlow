@@ -41,10 +41,7 @@ namespace BOA.DataFlow
         /// </summary>
         public string CurrentLayerName
         {
-            get
-            {
-                return layerNames.Last();
-            }
+            get { return layerNames.Last(); }
         }
 
         /// <summary>
@@ -86,14 +83,14 @@ namespace BOA.DataFlow
 
             var currentLayerId = LayerHelper.GetCurrentLayerId(layerNames);
 
-            var removeList     = dictionary.Values.Where(p => p.Layer == currentLayerId).Select(p => p.Key).ToList();
+            var removeList = dictionary.Values.Where(p => p.Layer == currentLayerId).Select(p => p.Key).ToList();
 
             foreach (var key in removeList)
             {
                 dictionary.Remove(key);
             }
 
-            layerNames.RemoveAt(layerNames.Count-1);
+            layerNames.RemoveAt(layerNames.Count - 1);
         }
 
         /// <summary>
@@ -370,8 +367,6 @@ namespace BOA.DataFlow
         }
         #endregion
 
-
-
         #region Event Bus
         /// <summary>
         ///     Publishes the event.
@@ -421,8 +416,8 @@ namespace BOA.DataFlow
             eventBus.UnSubscribe(eventName.ToString(), action);
         }
         #endregion
-        #region ICollection
 
+        #region ICollection
         /// <summary>
         ///     Adds the specified entry.
         /// </summary>
@@ -502,9 +497,6 @@ namespace BOA.DataFlow
         {
             return GetEnumerator();
         }
-        
         #endregion
-
-        
     }
 }
