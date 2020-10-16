@@ -21,11 +21,11 @@ namespace BOA.DataFlow
         /// <summary>
         ///     Initializes a new instance of the <see cref="DataContextEntry" /> class.
         /// </summary>
-        public DataContextEntry(string key, int layerIndex, object value)
+        public DataContextEntry(string key, string layer, object value)
         {
-            Key        = key;
-            LayerIndex = layerIndex;
-            Value      = value;
+            Key   = key;
+            Layer = layer;
+            Value = value;
 
             shortName = ShortNameHelper.GetShortName(key);
         }
@@ -38,9 +38,9 @@ namespace BOA.DataFlow
         public string Key { get; }
 
         /// <summary>
-        ///     The layer index
+        ///     The layer
         /// </summary>
-        public int LayerIndex { get; }
+        public string Layer { get; }
 
         /// <summary>
         ///     The value
@@ -54,7 +54,7 @@ namespace BOA.DataFlow
         /// </summary>
         public override string ToString()
         {
-            return $"Layer: {LayerIndex} - Key: {shortName} : {Value}";
+            return $"Layer: {Layer} - Key: {shortName} : {Value}";
         }
         #endregion
     }

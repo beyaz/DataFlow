@@ -25,11 +25,6 @@ namespace BOA.DataFlow
         internal readonly List<string> layerNames = new List<string> {"Root"};
 
         /// <summary>
-        ///     The current layer index
-        /// </summary>
-        internal int currentLayerIndex;
-
-        /// <summary>
         ///     The forward map
         /// </summary>
         readonly Dictionary<string, string> forwardMap = new Dictionary<string, string>();
@@ -48,12 +43,7 @@ namespace BOA.DataFlow
         {
             get
             {
-                if (currentLayerIndex >= 0)
-                {
-                    return layerNames[currentLayerIndex];
-                }
-
-                return null;
+                return layerNames.Last();
             }
         }
         
@@ -79,7 +69,7 @@ namespace BOA.DataFlow
                 throw new DataFlowException($"Data key should remove before set operation. Data key is '{dataKey}'");
             }
 
-            dictionary[dataKey.Id] = new DataContextEntry(dataKey.Id, currentLayerIndex, value);
+            dictionary[dataKey.Id] = new DataContextEntry(dataKey.Id, LayerHelper.GetCurrentLayerId(layerNames), value);
 
             OnInserted(dataKey);
         }
@@ -89,19 +79,21 @@ namespace BOA.DataFlow
         /// </summary>
         public void CloseCurrentLayer()
         {
-            if (currentLayerIndex < 0)
+            if (layerNames.Count <= 0)
             {
                 throw new DataFlowException("There is no layer to close.");
             }
 
-            var removeList = dictionary.Values.Where(p => p.LayerIndex == currentLayerIndex).Select(p => p.Key).ToList();
+            var currentLayerId = LayerHelper.GetCurrentLayerId(layerNames);
+
+            var removeList     = dictionary.Values.Where(p => p.Layer == currentLayerId).Select(p => p.Key).ToList();
 
             foreach (var key in removeList)
             {
                 dictionary.Remove(key);
             }
 
-            currentLayerIndex--;
+            layerNames.RemoveAt(layerNames.Count-1);
         }
 
         /// <summary>
@@ -165,7 +157,6 @@ namespace BOA.DataFlow
                 throw new ArgumentNullException(nameof(layerName));
             }
 
-            currentLayerIndex++;
             layerNames.Add(layerName);
         }
 
@@ -177,9 +168,9 @@ namespace BOA.DataFlow
             DataContextEntry dataContextEntry = null;
             if (dictionary.TryGetValue(dataKey.Id, out dataContextEntry))
             {
-                if (dataContextEntry.LayerIndex != currentLayerIndex)
+                if (dataContextEntry.Layer != LayerHelper.GetCurrentLayerId(layerNames))
                 {
-                    throw new DataFlowException($"Other layer variables can not be remove. CurrentLayerIndex: {currentLayerIndex}, TargetLayerIndex: {dataContextEntry.LayerIndex}");
+                    throw new DataFlowException($"Other layer variables can not be remove. CurrentLayer: {LayerHelper.GetCurrentLayerId(layerNames)}, TargetLayer: {dataContextEntry.Layer}");
                 }
 
                 dictionary.Remove(dataKey.Id);
@@ -244,7 +235,7 @@ namespace BOA.DataFlow
                 Remove(dataKey);
             }
 
-            dictionary[dataKey.Id] = new DataContextEntry(dataKey.Id, currentLayerIndex, value);
+            dictionary[dataKey.Id] = new DataContextEntry(dataKey.Id, LayerHelper.GetCurrentLayerId(layerNames), value);
 
             OnUpdated(dataKey);
         }

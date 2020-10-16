@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 
 namespace BOA.DataFlow
 {
@@ -20,6 +19,14 @@ namespace BOA.DataFlow
             }
 
             return layerNames.Count + ":" + layerNames[layerNames.Count - 1];
+        }
+
+        /// <summary>
+        ///     Gets the current layer identifier.
+        /// </summary>
+        public static string GetCurrentLayerId(string layerName, int index)
+        {
+            return index + ":" + layerName;
         }
         #endregion
     }
