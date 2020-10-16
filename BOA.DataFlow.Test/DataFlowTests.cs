@@ -89,8 +89,11 @@ namespace BOA.DataFlow
         {
             var context = new DataContext();
 
-            context.OpenNewLayer(string.Empty);
+            context.OpenNewLayer("Layer Q");
             context.Add(data_bracket_1_1, "C");
+
+            new DataContextDebugView(context).Items[1].Items.Length.Should().Be(1);
+
             context.Remove(data_bracket_1_1);
             context.CloseCurrentLayer();
         }
