@@ -2,16 +2,17 @@
 <package>
   <metadata>
     <id>BOA.DataFlow</id>
-    <version>1.0.0.8</version>
+    <version>1.0.0.9</version>
     <title>Simple Data Management Library</title>
     <authors>Abdullah Beyaztaş</authors>
     <owners>Abdullah Beyaztaş</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-      Simple data management library.
-      Hold all data in a DataContext instance. And pass all related methods and classes. 
-      Access or modify data by using DataKey instances.
-    </description>
+Simple data management library.
+ 
+Hold all data in a DataContext instance and passes all related methods and classes. 
+Access or modify data by using DataKey instances.
+</description>
     <releaseNotes>upload</releaseNotes>
     <copyright>WhiteStone</copyright>
     <tags>Simple Data Management Library</tags>
