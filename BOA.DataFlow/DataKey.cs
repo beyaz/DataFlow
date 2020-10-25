@@ -38,18 +38,7 @@ namespace BOA.DataFlow
         /// </summary>
         public string Id { get; }
         #endregion
-
-        #region Public Indexers
-        /// <summary>
-        ///     Gets the <see cref="TValueType" /> with the specified context.
-        /// </summary>
-        public TValueType this[DataContext context]
-        {
-            get { return context.Get(this); }
-            set { context.Add(this, value); }
-        }
-        #endregion
-
+        
         #region Public Methods
         /// <summary>
         ///     Returns a <see cref="System.String" /> that represents this instance.
