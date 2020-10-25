@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -53,7 +52,7 @@ namespace BOA.DataFlow
         public void Can_not_modify_parent_scope_data()
         {
             var context = new DataContext();
-            data_bracket_0_0[context] = "A";
+            context.Add(data_bracket_0_0, "A");
 
             context.OpenNewLayer(string.Empty);
             context.Add(data_bracket_1_0, "B");
@@ -71,7 +70,7 @@ namespace BOA.DataFlow
         public void Can_not_remove_parent_scope_data()
         {
             var context = new DataContext();
-            data_bracket_0_0[context] = "A";
+            context.Add(data_bracket_0_0, "A");
 
             context.OpenNewLayer(string.Empty);
             context.Add(data_bracket_1_0, "B");
@@ -125,7 +124,7 @@ namespace BOA.DataFlow
 
             context.CurrentLayerName.Should().Be("Layer1");
 
-            key4[context].Should().Be("D");
+            context.Get(key4).Should().Be("D");
 
             context.CloseCurrentLayer();
 
@@ -140,7 +139,7 @@ namespace BOA.DataFlow
             var keyB = new DataKey<string>(typeof(DataFlowTests), "B");
 
             var context = new DataContext();
-            keyA[context] = "A";
+            context.Add(keyA , "A");
             context.ForwardKey(keyB, keyA);
 
             context.Contains(keyA).Should().BeTrue();
@@ -222,7 +221,7 @@ namespace BOA.DataFlow
         public void Should_get_data_when_key_is_forwarded()
         {
             var context = new DataContext();
-            data_bracket_0_0[context] = "A";
+            context.Add(data_bracket_0_0, "A");
 
             context.Contains(data_bracket_1_0).Should().BeFalse();
 
